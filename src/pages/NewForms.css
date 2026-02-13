@@ -1,0 +1,11 @@
+.pricing-card-hover:hover {
+    border-color: #800000;
+    transform: translateY(-4px);
+    transition: all 0.3s ease;
+}
+
+.pricing-card-gold-hover:hover {
+    border-color: #D4A574;
+    transform: translateY(-4px);
+    transition: all 0.3s ease;
+}
