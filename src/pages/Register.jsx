@@ -59,6 +59,9 @@ const Register = () => {
         setIsSubmitting(true);
         setSubmitStatus({ type: 'info', message: 'Processing your registration...' });
 
+        console.log('DEBUG: VITE_SUPABASE_URL =', SUPABASE_URL);
+        console.log('DEBUG: VITE_SUPABASE_ANON_KEY is set?', !!SUPABASE_ANON_KEY);
+
         if (!SUPABASE_URL) {
             console.error('Missing VITE_SUPABASE_URL');
             setSubmitStatus({
