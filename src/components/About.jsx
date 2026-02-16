@@ -2,7 +2,7 @@ import React from 'react';
 
 const About = () => {
     return (
-        <section className="bg-primary text-white py-24 px-10">
+        <section className="bg-primary text-white py-16 px-6 md:py-24 md:px-10">
             <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
                 <div>
                     <h3 className="text-4xl font-black mb-8 leading-tight">Our Mission & Vision for Punjab's Prosperity</h3>
@@ -27,20 +27,20 @@ const About = () => {
                 </div>
                 <div className="grid grid-cols-2 gap-6">
                     <div className="bg-white p-8 rounded-xl text-center shadow-2xl">
-                        <div className="text-5xl font-black text-primary mb-2">50K+</div>
+                        <div className="text-3xl md:text-5xl font-black text-primary mb-2">50K+</div>
                         <div className="text-slate-600 font-bold uppercase tracking-widest text-xs">Students Trained</div>
                     </div>
                     <div className="bg-white p-8 rounded-xl text-center shadow-2xl">
-                        <div className="text-5xl font-black text-primary mb-2">35+</div>
+                        <div className="text-3xl md:text-5xl font-black text-primary mb-2">35+</div>
                         <div className="text-slate-600 font-bold uppercase tracking-widest text-xs">Years of Excellence</div>
                     </div>
                     <div className="bg-white p-8 rounded-xl text-center shadow-2xl">
-                        <div className="text-5xl font-black text-primary mb-2">10+</div>
+                        <div className="text-3xl md:text-5xl font-black text-primary mb-2">10+</div>
                         <div className="text-slate-600 font-bold uppercase tracking-widest text-xs">
                             Certified Professionals </div>
                     </div>
                     <div className="bg-white p-8 rounded-xl text-center shadow-2xl">
-                        <div className="text-5xl font-black text-primary mb-2">5+</div>
+                        <div className="text-3xl md:text-5xl font-black text-primary mb-2">5+</div>
                         <div className="text-slate-600 font-bold uppercase tracking-widest text-xs">Advanced Training Programs</div>
                     </div>
                 </div>

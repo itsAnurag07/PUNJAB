@@ -2,7 +2,7 @@ import React from 'react';
 
 const Services = () => {
     return (
-        <section className="bg-cream-accent dark:bg-background-dark py-20 px-10">
+        <section className="bg-cream-accent dark:bg-background-dark py-16 px-6 md:py-20 md:px-10">
             <div className="max-w-7xl mx-auto">
                 <div className="text-center mb-16">
                     <span className="text-primary font-bold uppercase tracking-widest text-sm">Our Core Pillars</span>

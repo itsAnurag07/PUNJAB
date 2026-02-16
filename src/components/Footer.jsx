@@ -4,7 +4,7 @@ import footerLogo from '../assets/footer-logo.png';
 const Footer = () => {
     return (
         <footer className="bg-primary text-white pt-20">
-            <div className="max-w-7xl mx-auto px-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 pb-20">
+            <div className="max-w-7xl mx-auto px-6 md:px-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 pb-10 md:pb-20">
                 <div>
                     <div className="flex flex-col gap-2 mb-4">
                         <img src={footerLogo} alt="JIDT Jalandhar Logo" className="h-16 w-auto object-contain self-start" />
@@ -57,7 +57,7 @@ const Footer = () => {
                 </div>
             </div>
             <div className="bg-black/20 py-6 px-10 text-center text-white/50 text-xs font-medium">
-                <div className="max-w-7xl mx-auto flex justify-between items-center">
+                <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
                     <p>© 2026 JIDT Jalandhar. All rights reserved. Government approved.</p>
                     <div className="flex gap-6">
                         <a className="hover:text-white" href="#">Privacy Policy</a>

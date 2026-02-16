@@ -2,8 +2,8 @@ import React from 'react';
 
 const TopBar = () => {
     return (
-        <div className="bg-primary text-white text-xs py-2 px-10 flex justify-between items-center border-b border-primary/20">
-            <div className="flex gap-6 items-center">
+        <div className="hidden md:flex bg-primary text-white text-xs py-2 px-4 md:px-10 flex-col md:flex-row justify-between items-center gap-2 border-b border-primary/20">
+            <div className="flex flex-wrap justify-center gap-4 md:gap-6 items-center">
                 <div className="flex items-center gap-1">
                     <span className="material-symbols-outlined text-[16px]">call</span>
                     <span>+91 90560-66473, +91 90560-66373</span>

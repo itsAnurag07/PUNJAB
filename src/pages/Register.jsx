@@ -59,6 +59,16 @@ const Register = () => {
         setIsSubmitting(true);
         setSubmitStatus({ type: 'info', message: 'Processing your registration...' });
 
+        if (!SUPABASE_URL) {
+            console.error('Missing VITE_SUPABASE_URL');
+            setSubmitStatus({
+                type: 'error',
+                message: 'Configuration Error: Missing API URL. Please contact support.'
+            });
+            setIsSubmitting(false);
+            return;
+        }
+
         try {
             // 1. Collect text data from form
             const formData = new FormData(e.target);
