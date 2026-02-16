@@ -62,6 +62,16 @@ const Register = () => {
         console.log('DEBUG: VITE_SUPABASE_URL =', SUPABASE_URL);
         console.log('DEBUG: VITE_SUPABASE_ANON_KEY is set?', !!SUPABASE_ANON_KEY);
 
+        if (!supabase) {
+            console.error('Supabase client is not initialized. Check VITE_SUPABASE_ANON_KEY.');
+            setSubmitStatus({
+                type: 'error',
+                message: 'System Error: Database connection failed. Please contact support.'
+            });
+            setIsSubmitting(false);
+            return;
+        }
+
         if (!SUPABASE_URL) {
             console.error('Missing VITE_SUPABASE_URL');
             setSubmitStatus({
@@ -411,6 +421,7 @@ const Register = () => {
                             <p className="text-[9px] text-slate-300 font-bold uppercase tracking-[0.2em] text-center max-w-sm leading-relaxed">
                                 By submitting, you declare that all information provided is accurate and truthful.
                             </p>
+                            <p className="text-[8px] text-slate-200">v1.1</p>
                         </div>
                     </section>
                 </form>
