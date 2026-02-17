@@ -9,6 +9,17 @@ const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
 const Register = () => {
     const location = useLocation();
     const [previews, setPreviews] = useState({});
+    const [selectedCourse, setSelectedCourse] = useState("");
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitStatus, setSubmitStatus] = useState({ type: '', message: '' });
+
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const course = params.get('course');
+        if (course) {
+            setSelectedCourse(course);
+        }
+    }, [location]);
 
     // Generic file handler for all inputs including profile photo
     const handleFileChange = (e, fieldName) => {
