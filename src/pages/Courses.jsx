@@ -26,7 +26,7 @@ const Courses = () => {
                     <div className="space-y-4 mb-10">
                         <div className="flex items-center gap-3">
                             <span className="material-symbols-outlined text-white/80">schedule</span>
-                            <span className="text-lg">10:00 AM - 04:00 PM | Mon-Sat</span>
+                            <span className="text-lg">09:00 AM - 05:00 PM | Mon-Saturday</span>
                         </div>
                         <div className="flex items-center gap-3">
                             <span className="material-symbols-outlined text-white/80">location_on</span>
@@ -58,7 +58,7 @@ const Courses = () => {
                                 <span className="material-symbols-outlined text-3xl text-primary">calendar_today</span>
                                 <div>
                                     <p className="text-sm font-bold text-primary uppercase">Duration</p>
-                                    <p className="text-xl font-bold">2 to 5 Days (As per Category)</p>
+                                    <p className="text-xl font-bold">1 Day Refresher Course</p>
                                 </div>
                             </div>
                             <div className="bg-cream-accent dark:bg-zinc-800 p-6 border-l-8 border-primary rounded-lg flex items-center gap-6">
@@ -191,7 +191,7 @@ const Courses = () => {
                                     <span className="bg-zinc-100 text-zinc-600 px-3 py-1 text-xs font-bold rounded">Standard</span>
                                 </div>
                                 <ul className="space-y-4 mb-10">
-                                    <li className="flex items-center gap-3"><span className="material-symbols-outlined text-primary">done</span> 5 Days Full Training</li>
+                                    <li className="flex items-center gap-3"><span className="material-symbols-outlined text-primary">done</span> 1 Day Refresher Course</li>
                                     <li className="flex items-center gap-3"><span className="material-symbols-outlined text-primary">done</span> Batch starts every Monday</li>
                                     <li className="flex items-center gap-3"><span className="material-symbols-outlined text-primary">done</span> Standard Fee Structure</li>
                                 </ul>
@@ -205,7 +205,7 @@ const Courses = () => {
                                     <span className="bg-primary/10 text-primary px-3 py-1 text-xs font-bold rounded uppercase">Priority</span>
                                 </div>
                                 <ul className="space-y-4 mb-10">
-                                    <li className="flex items-center gap-3"><span className="material-symbols-outlined text-primary">done</span> 2 Days Express Module</li>
+                                    <li className="flex items-center gap-3"><span className="material-symbols-outlined text-primary">done</span> 1 Day Express Module</li>
                                     <li className="flex items-center gap-3"><span className="material-symbols-outlined text-primary">done</span> Immediate Slot Allocation</li>
                                     <li className="flex items-center gap-3"><span className="material-symbols-outlined text-primary">done</span> Priority Certificate Processing</li>
                                 </ul>
