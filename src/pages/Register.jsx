@@ -8,25 +8,18 @@ const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 const Register = () => {
     const location = useLocation();
-    const [profilePreview, setProfilePreview] = useState(null);
-    const [selectedCourse, setSelectedCourse] = useState("");
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [submitStatus, setSubmitStatus] = useState({ type: '', message: '' });
+    const [previews, setPreviews] = useState({});
 
-    useEffect(() => {
-        const params = new URLSearchParams(location.search);
-        const course = params.get('course');
-        if (course) {
-            setSelectedCourse(course);
-        }
-    }, [location]);
-
-    const handleProfileChange = (e) => {
+    // Generic file handler for all inputs including profile photo
+    const handleFileChange = (e, fieldName) => {
         const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
-                setProfilePreview(reader.result);
+                setPreviews(prev => ({
+                    ...prev,
+                    [fieldName]: reader.result
+                }));
             };
             reader.readAsDataURL(file);
         }
@@ -245,17 +238,23 @@ const Register = () => {
                         <div className="mt-12 pt-10 border-t border-slate-50 grid grid-cols-1 md:grid-cols-2 gap-10">
                             <div className="form-group-modern">
                                 <label className="label-modern">Passport Size Photo <span className="text-primary">*</span></label>
-                                <div className="upload-zone group">
-                                    <span className="material-symbols-outlined text-3xl text-slate-200 group-hover:text-primary transition-colors">cloud_upload</span>
-                                    <p className="text-[10px] font-bold text-slate-400 mt-2 uppercase tracking-widest">Click or drag to upload</p>
-                                    <input type="file" name="photo" className="absolute inset-0 opacity-0 cursor-pointer" onChange={handleProfileChange} accept="image/*" />
+                                <div className="upload-zone group relative overflow-hidden">
+                                    {previews.photo ? (
+                                        <img src={previews.photo} alt="Preview" className="w-full h-full object-contain absolute inset-0 z-0 p-2" />
+                                    ) : (
+                                        <>
+                                            <span className="material-symbols-outlined text-3xl text-slate-200 group-hover:text-primary transition-colors">cloud_upload</span>
+                                            <p className="text-[10px] font-bold text-slate-400 mt-2 uppercase tracking-widest">Click or drag to upload</p>
+                                        </>
+                                    )}
+                                    <input type="file" name="photo" className="absolute inset-0 opacity-0 cursor-pointer z-10" onChange={(e) => handleFileChange(e, 'photo')} accept="image/*" />
                                 </div>
                             </div>
                             <div className="form-group-modern">
                                 <label className="label-modern">Profile Preview</label>
-                                <div className={`preview-pill h-full flex items-center justify-center min-h-[160px] ${profilePreview ? 'active' : ''}`}>
-                                    {profilePreview ? (
-                                        <img src={profilePreview} alt="Preview" className="w-full h-full object-cover" />
+                                <div className={`preview-pill h-full flex items-center justify-center min-h-[160px] ${previews.photo ? 'active' : ''}`}>
+                                    {previews.photo ? (
+                                        <img src={previews.photo} alt="Preview" className="w-full h-full object-cover" />
                                     ) : (
                                         <div className="text-[9px] font-bold text-slate-300 uppercase tracking-[0.2em]">Awaiting Upload...</div>
                                     )}
@@ -311,16 +310,24 @@ const Register = () => {
                             </div>
                             <div className="form-group-modern">
                                 <label className="label-modern">Aadhar Front Side</label>
-                                <div className="upload-zone py-6">
-                                    <span className="material-symbols-outlined text-xl text-slate-200">add_photo_alternate</span>
-                                    <input type="file" name="aadhar_front" className="absolute inset-0 opacity-0 cursor-pointer" />
+                                <div className="upload-zone py-6 relative overflow-hidden h-40 flex flex-col items-center justify-center">
+                                    {previews.aadhar_front ? (
+                                        <img src={previews.aadhar_front} alt="Preview" className="w-full h-full object-contain absolute inset-0 z-0 p-2" />
+                                    ) : (
+                                        <span className="material-symbols-outlined text-xl text-slate-200">add_photo_alternate</span>
+                                    )}
+                                    <input type="file" name="aadhar_front" className="absolute inset-0 opacity-0 cursor-pointer z-10" onChange={(e) => handleFileChange(e, 'aadhar_front')} accept="image/*" />
                                 </div>
                             </div>
                             <div className="form-group-modern">
                                 <label className="label-modern">Aadhar Back Side</label>
-                                <div className="upload-zone py-6">
-                                    <span className="material-symbols-outlined text-xl text-slate-200">add_photo_alternate</span>
-                                    <input type="file" name="aadhar_back" className="absolute inset-0 opacity-0 cursor-pointer" />
+                                <div className="upload-zone py-6 relative overflow-hidden h-40 flex flex-col items-center justify-center">
+                                    {previews.aadhar_back ? (
+                                        <img src={previews.aadhar_back} alt="Preview" className="w-full h-full object-contain absolute inset-0 z-0 p-2" />
+                                    ) : (
+                                        <span className="material-symbols-outlined text-xl text-slate-200">add_photo_alternate</span>
+                                    )}
+                                    <input type="file" name="aadhar_back" className="absolute inset-0 opacity-0 cursor-pointer z-10" onChange={(e) => handleFileChange(e, 'aadhar_back')} accept="image/*" />
                                 </div>
                             </div>
                         </div>
@@ -366,18 +373,30 @@ const Register = () => {
                         <div className="mt-12 pt-10 border-t border-slate-50 grid grid-cols-1 md:grid-cols-2 gap-10">
                             <div className="form-group-modern">
                                 <label className="label-modern">Driving License Front Side <span className="text-primary">*</span></label>
-                                <div className="upload-zone py-6 group">
-                                    <span className="material-symbols-outlined text-xl text-slate-200 group-hover:text-primary transition-colors">add_photo_alternate</span>
-                                    <p className="text-[10px] font-bold text-slate-400 mt-2 uppercase tracking-widest">Click or drag to upload</p>
-                                    <input type="file" name="license_front" className="absolute inset-0 opacity-0 cursor-pointer" accept="image/*" />
+                                <div className="upload-zone py-6 group relative overflow-hidden h-40 flex flex-col items-center justify-center">
+                                    {previews.license_front ? (
+                                        <img src={previews.license_front} alt="Preview" className="w-full h-full object-contain absolute inset-0 z-0 p-2" />
+                                    ) : (
+                                        <>
+                                            <span className="material-symbols-outlined text-xl text-slate-200 group-hover:text-primary transition-colors">add_photo_alternate</span>
+                                            <p className="text-[10px] font-bold text-slate-400 mt-2 uppercase tracking-widest">Click or drag to upload</p>
+                                        </>
+                                    )}
+                                    <input type="file" name="license_front" className="absolute inset-0 opacity-0 cursor-pointer z-10" onChange={(e) => handleFileChange(e, 'license_front')} accept="image/*" />
                                 </div>
                             </div>
                             <div className="form-group-modern">
                                 <label className="label-modern">Driving License Back Side <span className="text-primary">*</span></label>
-                                <div className="upload-zone py-6 group">
-                                    <span className="material-symbols-outlined text-xl text-slate-200 group-hover:text-primary transition-colors">add_photo_alternate</span>
-                                    <p className="text-[10px] font-bold text-slate-400 mt-2 uppercase tracking-widest">Click or drag to upload</p>
-                                    <input type="file" name="license_back" className="absolute inset-0 opacity-0 cursor-pointer" accept="image/*" />
+                                <div className="upload-zone py-6 group relative overflow-hidden h-40 flex flex-col items-center justify-center">
+                                    {previews.license_back ? (
+                                        <img src={previews.license_back} alt="Preview" className="w-full h-full object-contain absolute inset-0 z-0 p-2" />
+                                    ) : (
+                                        <>
+                                            <span className="material-symbols-outlined text-xl text-slate-200 group-hover:text-primary transition-colors">add_photo_alternate</span>
+                                            <p className="text-[10px] font-bold text-slate-400 mt-2 uppercase tracking-widest">Click or drag to upload</p>
+                                        </>
+                                    )}
+                                    <input type="file" name="license_back" className="absolute inset-0 opacity-0 cursor-pointer z-10" onChange={(e) => handleFileChange(e, 'license_back')} accept="image/*" />
                                 </div>
                             </div>
                         </div>
