@@ -65,8 +65,9 @@ const ContactUs = () => {
                                 </div>
                                 <div>
                                     <h3 className="font-bold text-lg mb-1 dark:text-gray-200">Email Support</h3>
-                                    <p className="text-gray-600 dark:text-gray-400">info@jidtjalandhar.com</p>
-                                    <p className="text-gray-600 dark:text-gray-400">support@jidt.in</p>
+                                    <p className="text-gray-600 dark:text-gray-400">
+                                        jaldrivingcentre@gmail.com</p>
+
                                 </div>
                             </div>
                             <div className="border-l-4 border-primary bg-gray-50 dark:bg-zinc-800 p-6 rounded-r-lg flex items-start gap-4 shadow-sm">

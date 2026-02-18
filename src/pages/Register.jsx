@@ -58,30 +58,24 @@ const Register = () => {
         return urlData?.publicUrl || null;
     };
 
+    // Load Razorpay SDK
+    const loadRazorpay = () => {
+        return new Promise((resolve) => {
+            const script = document.createElement('script');
+            script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+            script.onload = () => resolve(true);
+            script.onerror = () => resolve(false);
+            document.body.appendChild(script);
+        });
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
         setSubmitStatus({ type: 'info', message: 'Processing your registration...' });
 
-        console.log('DEBUG: VITE_SUPABASE_URL =', SUPABASE_URL);
-        console.log('DEBUG: VITE_SUPABASE_ANON_KEY is set?', !!SUPABASE_ANON_KEY);
-
         if (!supabase) {
-            console.error('Supabase client is not initialized. Check VITE_SUPABASE_ANON_KEY.');
-            setSubmitStatus({
-                type: 'error',
-                message: 'System Error: Database connection failed. Please contact support.'
-            });
-            setIsSubmitting(false);
-            return;
-        }
-
-        if (!SUPABASE_URL) {
-            console.error('Missing VITE_SUPABASE_URL');
-            setSubmitStatus({
-                type: 'error',
-                message: 'Configuration Error: Missing API URL. Please contact support.'
-            });
+            setSubmitStatus({ type: 'error', message: 'System Error: Database connection failed.' });
             setIsSubmitting(false);
             return;
         }
@@ -129,48 +123,113 @@ const Register = () => {
             });
 
             await Promise.all(uploadPromises);
-            console.log('Uploads complete, data:', cleanData);
+            console.log('Uploads complete');
 
-            // 3. Send to backend Edge Function (handles DB save + email)
-            setSubmitStatus({ type: 'info', message: 'Saving and sending confirmation...' });
+            // 3. Create Razorpay Order
+            setSubmitStatus({ type: 'info', message: 'Initiating Secure Payment...' });
 
-            const response = await fetch(`${SUPABASE_URL}/functions/v1/register`, {
+            const isLoaded = await loadRazorpay();
+            if (!isLoaded) {
+                throw new Error('Razorpay SDK failed to load. Please check your internet connection.');
+            }
+
+            const orderResponse = await fetch(`${SUPABASE_URL}/functions/v1/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
                 },
-                body: JSON.stringify(cleanData)
+                body: JSON.stringify({
+                    action: 'create_order',
+                    course_name: cleanData.selected_program
+                })
             });
 
-            const result = await response.json();
-            console.log('Backend response:', result);
+            const orderData = await orderResponse.json();
+            if (!orderResponse.ok) throw new Error(orderData.error || 'Failed to initiate payment');
 
-            if (!response.ok || !result.success) {
-                throw new Error(result.error || 'Registration failed');
-            }
+            // 4. Open Razorpay Checkout
+            const options = {
+                key: orderData.key_id,
+                amount: orderData.amount,
+                currency: orderData.currency,
+                name: "ITDC Punjab",
+                description: `Enrollment Fee: ${cleanData.selected_program}`,
+                order_id: orderData.order_id,
+                // image: "https://your-logo-url.png", // Optional
+                handler: async function (response) {
+                    // Payment Success! Now Register.
+                    setSubmitStatus({ type: 'info', message: 'Payment Successful! Finalizing Registration...' });
 
-            // 4. Show success
-            const emailNote = result.email?.sent
-                ? ' A confirmation email has been sent.'
-                : '';
+                    try {
+                        const finalData = {
+                            ...cleanData,
+                            razorpay_payment_id: response.razorpay_payment_id,
+                            razorpay_order_id: response.razorpay_order_id,
+                            razorpay_signature: response.razorpay_signature
+                        };
 
-            const enrollmentNote = result.enrollment_number
-                ? ` Your Enrollment No: ${result.enrollment_number}`
-                : '';
+                        const registerResponse = await fetch(`${SUPABASE_URL}/functions/v1/register`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                            },
+                            body: JSON.stringify(finalData)
+                        });
 
-            setSubmitStatus({
-                type: 'success',
-                message: `✅ Registration submitted successfully!${enrollmentNote}${emailNote}`
+                        const result = await registerResponse.json();
+                        if (!registerResponse.ok || !result.success) throw new Error(result.error || 'Registration failed after payment');
+
+                        // Success Actions
+                        const emailNote = result.email?.sent ? ' A confirmation email has been sent.' : '';
+                        const enrollmentNote = result.enrollment_number ? ` Your Enrollment No: ${result.enrollment_number}` : '';
+
+                        setSubmitStatus({
+                            type: 'success',
+                            message: `✅ Registration submitted successfully!${enrollmentNote}${emailNote}`
+                        });
+                        setIsSubmitting(false); // Enable button again if needed, or keep disabled to prevent double submit
+                    } catch (err) {
+                        console.error(err);
+                        setSubmitStatus({
+                            type: 'error',
+                            message: `Payment succeeded but registration failed: ${err.message}. Please contact support with Payment ID: ${response.razorpay_payment_id}`
+                        });
+                        setIsSubmitting(false);
+                    }
+                },
+                prefill: {
+                    name: cleanData.full_name,
+                    email: cleanData.email,
+                    contact: cleanData.mobile
+                },
+                theme: {
+                    color: "#d32f2f" // Primary Red
+                },
+                modal: {
+                    ondismiss: function () {
+                        setIsSubmitting(false);
+                        setSubmitStatus({ type: 'error', message: 'Payment cancelled. Registration not completed.' });
+                    }
+                }
+            };
+
+            const rzp1 = new window.Razorpay(options);
+            rzp1.on('payment.failed', function (response) {
+                console.error(response.error);
+                setSubmitStatus({ type: 'error', message: `Payment Failed: ${response.error.description}` });
+                setIsSubmitting(false);
             });
+
+            rzp1.open();
 
         } catch (error) {
-            console.error('Registration error:', error);
+            console.error('Registration/Payment error:', error);
             setSubmitStatus({
                 type: 'error',
                 message: error.message || 'Something went wrong. Please try again.'
             });
-        } finally {
             setIsSubmitting(false);
         }
     };
