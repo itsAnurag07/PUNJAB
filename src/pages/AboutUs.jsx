@@ -100,12 +100,12 @@ const AboutUs = () => {
                         <div className="p-6 bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-primary/10 rounded-xl shadow-sm hover:shadow-md transition-shadow">
                             <span className="material-symbols-outlined text-primary mb-4 !text-3xl">domain</span>
                             <h4 className="font-bold text-lg mb-2">Modern Facility</h4>
-                            <p className="text-sm text-zinc-500">Advanced training tracks and classroom amenities.</p>
+                            <p className="text-sm text-zinc-500">Advanced training  and Techniques .</p>
                         </div>
                         <div className="p-6 bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-primary/10 rounded-xl shadow-sm hover:shadow-md transition-shadow">
                             <span className="material-symbols-outlined text-primary mb-4 !text-3xl">construction</span>
-                            <h4 className="font-bold text-lg mb-2">Well-Maintained Vehicles</h4>
-                            <p className="text-sm text-zinc-500">A diverse fleet of modern heavy vehicles for practical training.</p>
+                            <h4 className="font-bold text-lg mb-2">Heavy Vehicles Simulator</h4>
+                            <p className="text-sm text-zinc-500"> Modern heavy vehicles simulator for practical training.</p>
                         </div>
                         <div className="p-6 bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-primary/10 rounded-xl shadow-sm hover:shadow-md transition-shadow">
                             <span className="material-symbols-outlined text-primary mb-4 !text-3xl">menu_book</span>
@@ -141,7 +141,7 @@ const AboutUs = () => {
                             <div className="flex flex-col items-center gap-2">
                                 <span className="material-symbols-outlined text-primary">location_on</span>
                                 <p className="font-bold text-primary">Address</p>
-                                <p className="text-zinc-700">Dharam Complex, Jalandhar, Punjab</p>
+                                <p className="text-zinc-700">Dharam Complex, G.T. Road, Kartarpur, Jalandhar, 144801</p>
                             </div>
                             <div className="flex flex-col items-center gap-2">
                                 <span className="material-symbols-outlined text-primary">call</span>
@@ -151,7 +151,7 @@ const AboutUs = () => {
                             <div className="col-span-full flex flex-col items-center gap-2">
                                 <span className="material-symbols-outlined text-primary">mail</span>
                                 <p className="font-bold text-primary">Email</p>
-                                <p className="text-zinc-700">info@jidtjalandhar.com</p>
+                                <p className="text-zinc-700">jaldrivingcentre@gmail.com</p>
                             </div>
                         </div>
                     </div>

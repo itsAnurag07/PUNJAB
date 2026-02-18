@@ -1,6 +1,16 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
+// Generate a unique enrollment number: ITDC-YYYYMMDD-XXXXX
+function generateEnrollmentNumber(): string {
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = String(now.getMonth() + 1).padStart(2, "0");
+    const d = String(now.getDate()).padStart(2, "0");
+    const rand = String(Math.floor(10000 + Math.random() * 90000)); // 5-digit
+    return `ITDC-${y}${m}${d}-${rand}`;
+}
+
 const corsHeaders = {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Headers":
@@ -66,6 +76,12 @@ function buildReceiptHTML(data: Record<string, string>) {
       <p style="color:#94a3b8;margin:8px 0 0;font-size:13px;letter-spacing:2px">ENROLLMENT RECEIPT</p>
     </div>
 
+    <!-- Enrollment Number Badge -->
+    <div style="background:#fef9c3;padding:14px 40px;border-bottom:2px solid #eab308;text-align:center">
+      <p style="margin:0;font-size:11px;color:#a16207;text-transform:uppercase;letter-spacing:2px;font-weight:700">Enrollment / Receipt Number</p>
+      <p style="margin:4px 0 0;font-size:22px;font-weight:900;color:#0f172a;letter-spacing:2px">${data.enrollment_number || "N/A"}</p>
+    </div>
+
     <!-- Program Badge -->
     <div style="background:#eff6ff;padding:16px 40px;border-bottom:2px solid #3b82f6">
       <p style="margin:0;font-size:11px;color:#3b82f6;text-transform:uppercase;letter-spacing:2px;font-weight:700">Training Program</p>
@@ -99,6 +115,13 @@ function buildReceiptHTML(data: Record<string, string>) {
       </table>
     </div>
     ` : ""}
+
+    <!-- Slot Booking CTA -->
+    <div style="background:#eff6ff;padding:20px 40px;border-top:2px solid #3b82f6;text-align:center">
+      <p style="margin:0;font-size:16px;font-weight:900;color:#0f172a;line-height:1.6">
+        Please call <span style="color:#1d4ed8">9056066473</span> , <span style="color:#1d4ed8">9056066373</span> for slot booking / appointment.
+      </p>
+    </div>
 
     <!-- Footer -->
     <div style="background:#f8fafc;padding:24px 40px;border-top:1px solid #e2e8f0;text-align:center">
@@ -138,6 +161,7 @@ serve(async (req: Request) => {
             "license_issue_date", "license_expiry_date", "place",
             "photo_url", "aadhar_front_url", "aadhar_back_url",
             "license_front_url", "license_back_url",
+            "enrollment_number",
         ];
 
         const cleanData: Record<string, string> = {};
@@ -146,6 +170,11 @@ serve(async (req: Request) => {
                 cleanData[field] = formData[field].trim();
             }
         }
+
+        // 3b. Generate unique enrollment number
+        const enrollmentNumber = generateEnrollmentNumber();
+        cleanData.enrollment_number = enrollmentNumber;
+        console.log("Generated enrollment number:", enrollmentNumber);
 
         // 4. Save to Supabase using service role key (bypasses RLS)
         const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
@@ -212,6 +241,7 @@ serve(async (req: Request) => {
             JSON.stringify({
                 success: true,
                 message: "Registration saved successfully",
+                enrollment_number: enrollmentNumber,
                 email: emailResult,
             }),
             {

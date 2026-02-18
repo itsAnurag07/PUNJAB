@@ -117,10 +117,10 @@ const ContactUs = () => {
                                 <div className="flex flex-col gap-1.5">
                                     <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">Course Interest</label>
                                     <select className="w-full rounded-lg border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 focus:ring-primary focus:border-primary text-gray-900 dark:text-gray-100">
-                                        <option>Light Motor Vehicle (LMV)</option>
+                                        {/* <option>Light Motor Vehicle (LMV)</option> */}
                                         <option>Heavy Motor Vehicle (HMV)</option>
-                                        <option>Defensive Driving</option>
-                                        <option>Hazardous Goods Training</option>
+                                        {/* <option>Defensive Driving</option>
+                                        <option>Hazardous Goods Training</option> */}
                                     </select>
                                 </div>
                             </div>

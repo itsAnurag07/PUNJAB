@@ -155,9 +155,13 @@ const Register = () => {
                 ? ' A confirmation email has been sent.'
                 : '';
 
+            const enrollmentNote = result.enrollment_number
+                ? ` Your Enrollment No: ${result.enrollment_number}`
+                : '';
+
             setSubmitStatus({
                 type: 'success',
-                message: `✅ Registration submitted successfully!${emailNote}`
+                message: `✅ Registration submitted successfully!${enrollmentNote}${emailNote}`
             });
 
         } catch (error) {
@@ -365,10 +369,7 @@ const Register = () => {
                             </div>
                             <div className="form-group-modern">
                                 <label className="label-modern">Issuing Authority</label>
-                                <select name="license_authority" className="input-modern select-modern">
-                                    <option value="">Select RTO</option>
-                                    <option>Jalandhar</option>
-                                </select>
+                                <input type="text" name="license_authority" className="input-modern" placeholder="Enter RTO Location" />
                             </div>
                             <div className="form-group-modern">
                                 <label className="label-modern">Issue Date</label>
@@ -429,7 +430,7 @@ const Register = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-16">
                             <div className="form-group-modern">
                                 <label className="label-modern">Place <span className="text-primary">*</span></label>
-                                <input type="text" name="place" className="input-modern" placeholder="Required" required />
+                                <input type="text" name="place" className="input-modern" defaultValue="Jalandhar" required />
                             </div>
                             <div className="form-group-modern">
                                 <label className="label-modern">Date</label>

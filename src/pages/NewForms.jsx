@@ -113,7 +113,7 @@ const NewForms = () => {
                                 "Comprehensive Safety Training",
                                 "Fuel Efficiency Mastery",
                                 "Dual Certification",
-                                "Priority Processing"
+
                             ].map((item, i) => (
                                 <li key={i} className="flex items-center gap-3 text-sm">
                                     <span className="material-symbols-outlined text-primary font-bold">verified</span>
@@ -121,7 +121,7 @@ const NewForms = () => {
                                 </li>
                             ))}
                         </ul>
-                        <a href="/register?course=Combined Form 5 & 5A" className="w-full bg-gradient-to-r from-primary to-red-700 text-white font-bold py-4 rounded-lg hover:shadow-lg hover:to-red-800 transition-all flex items-center justify-center gap-2 text-center group">
+                        <a href="/register?course=Combined Form 5 and 5A" className="w-full bg-gradient-to-r from-primary to-red-700 text-white font-bold py-4 rounded-lg hover:shadow-lg hover:to-red-800 transition-all flex items-center justify-center gap-2 text-center group">
                             Select Combined Package <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
                         </a>
                     </div>
@@ -145,10 +145,10 @@ const NewForms = () => {
                             </thead>
                             <tbody className="divide-y divide-[#e7dada] dark:divide-[#3d2a2a]">
                                 {[
-                                    ["Duration", "2 Days Intensive", "1 Day Specialized", "3 Days Comprehensive"],
-                                    ["Price", "₹885 (Incl. GST)", "₹590 (Incl. GST)", "₹1475 (Incl. GST)"],
+
+                                    ["Price", "₹885 ", "₹590 ", "₹1475"],
                                     ["Primary Focus", "Safety, Ethics & Rules", "Eco-Driving & Savings", "Complete Mastery"],
-                                    ["Practical Hours", "4 Hours Track Time", "2 Hours Fuel Testing", "6 Hours Total"],
+
                                     ["Difficulty Level", "Foundational", "Advanced Proficiency", "Expert Level"]
 
                                 ].map((row, i) => (

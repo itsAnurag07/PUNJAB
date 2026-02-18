@@ -18,10 +18,10 @@ const TopBar = () => {
                     <a href="#"><span className="material-symbols-outlined text-[18px]">public</span></a>
                     <a href="#"><span className="material-symbols-outlined text-[18px]">share</span></a>
                 </div>
-                <select className="bg-transparent border-none text-xs focus:ring-0 cursor-pointer">
+                {/* <select className="bg-transparent border-none text-xs focus:ring-0 cursor-pointer">
                     <option value="en" className="text-black">English</option>
                     <option value="ur" className="text-black">اردو</option>
-                </select>
+                </select> */}
             </div>
         </div>
     );
