@@ -12,6 +12,7 @@ const Register = () => {
     const [selectedCourse, setSelectedCourse] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitStatus, setSubmitStatus] = useState({ type: '', message: '' });
+    const [receiptUrl, setReceiptUrl] = useState(null);
 
     useEffect(() => {
         const params = new URLSearchParams(location.search);
@@ -189,6 +190,9 @@ const Register = () => {
                             type: 'success',
                             message: `✅ Registration submitted successfully!${enrollmentNote}${emailNote}`
                         });
+                        if (result.receipt_url) {
+                            setReceiptUrl(result.receipt_url);
+                        }
                         setIsSubmitting(false); // Enable button again if needed, or keep disabled to prevent double submit
                     } catch (err) {
                         console.error(err);
@@ -482,6 +486,17 @@ const Register = () => {
                                 }`}>
                                 <div className="flex flex-col items-center gap-4">
                                     <p>{submitStatus.message}</p>
+                                    {receiptUrl && (
+                                        <a
+                                            href={receiptUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="mt-4 px-6 py-2 bg-green-600 text-white text-sm font-bold rounded-full shadow-lg hover:bg-green-700 transition flex items-center gap-2"
+                                        >
+                                            <span className="material-symbols-outlined text-lg">download</span>
+                                            Download Receipt
+                                        </a>
+                                    )}
                                 </div>
                             </div>
                         )}

@@ -1,5 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { jsPDF } from "https://esm.sh/jspdf@2.5.1";
+import autoTable from "https://esm.sh/jspdf-autotable@3.5.28";
 
 // Generate a unique enrollment number: ITDC-YYYYMMDD-XXXXX
 function generateEnrollmentNumber(): string {
@@ -190,6 +192,72 @@ function buildReceiptHTML(data: Record<string, string>) {
 </html>`;
 }
 
+// Generate PDF Receipt
+function generateReceiptPDF(data: Record<string, string>): string {
+  const doc = new jsPDF();
+
+  // Branding
+  doc.setFillColor(15, 23, 42); // Dark Blue Header
+  doc.rect(0, 0, 210, 40, "F");
+
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(22);
+  doc.setFont("helvetica", "bold");
+  doc.text("ITDC PUNJAB", 105, 18, { align: "center" });
+
+  doc.setFontSize(10);
+  doc.setFont("helvetica", "normal");
+  doc.text("JALANDHAR INSTITUTE OF DRIVERS TRAINING", 105, 26, { align: "center" });
+  doc.text("Government Approved Driving Training Center", 105, 32, { align: "center" });
+
+  // Receipt Info
+  doc.setTextColor(0, 0, 0);
+  doc.setFontSize(12);
+  doc.text(`Enrollment No: ${data.enrollment_number}`, 14, 55);
+  doc.text(`Date: ${new Date().toLocaleDateString("en-IN")}`, 150, 55);
+
+  // Status Badge
+  doc.setFillColor(240, 253, 244); // Light Green
+  doc.setDrawColor(22, 163, 74); // Green Border
+  doc.roundedRect(14, 60, 182, 12, 1, 1, "FD");
+  doc.setTextColor(22, 163, 74);
+  doc.setFontSize(10);
+  doc.setFont("helvetica", "bold");
+  doc.text(`PAYMENT STATUS: ${data.payment_status?.toUpperCase() || "PENDING"}`, 105, 67, { align: "center" });
+
+  // Student Details Table
+  const userRows = [
+    ["Reference ID", data.payment_order_id || "N/A"],
+    ["Payment ID", data.payment_id || "N/A"],
+    ["Amount Paid", `Rs. ${(parseInt(data.payment_amount || "0") / 100).toFixed(2)}`],
+    ["Full Name", data.full_name],
+    ["Father's Name", data.father_name],
+    ["Course", data.selected_program],
+    ["Mobile", data.mobile],
+    ["Email", data.email],
+    ["Aadhar No", data.aadhar_number],
+    ["License No", data.license_number],
+  ];
+
+  autoTable(doc, {
+    startY: 80,
+    head: [['Field', 'Details']],
+    body: userRows,
+    theme: 'grid',
+    headStyles: { fillColor: [15, 23, 42], textColor: 255 },
+    styles: { fontSize: 10, cellPadding: 4 },
+    columnStyles: { 0: { fontStyle: 'bold', width: 60 } },
+  });
+
+  // Footer
+  const pageHeight = doc.internal.pageSize.height;
+  doc.setFontSize(8);
+  doc.setTextColor(100);
+  doc.text("This is a computer generated receipt.", 105, pageHeight - 10, { align: "center" });
+
+  return doc.output("datauristring").split(",")[1]; // Return Base64
+}
+
 serve(async (req: Request) => {
   // Handle CORS preflight
   if (req.method === "OPTIONS") {
@@ -338,31 +406,60 @@ serve(async (req: Request) => {
 
     console.log("Data saved to DB successfully");
 
-    // 5. Generate HTML receipt
+    // 5. Generate PDF Receipt
+    let pdfBase64 = "";
+    let publicPdfUrl = null;
+
+    try {
+      pdfBase64 = generateReceiptPDF(cleanData);
+      // Conversion for upload (Uint8Array)
+      const pdfBytes = Uint8Array.from(atob(pdfBase64), c => c.charCodeAt(0));
+
+      // Upload to Supabase Storage
+      const pdfFilename = `receipts/${cleanData.enrollment_number}_${Date.now()}.pdf`;
+      const { error: uploadError } = await supabase.storage
+        .from('registrations')
+        .upload(pdfFilename, pdfBytes, {
+          contentType: 'application/pdf',
+          upsert: true
+        });
+
+      if (!uploadError) {
+        const { data: urlData } = supabase.storage
+          .from('registrations')
+          .getPublicUrl(pdfFilename);
+        publicPdfUrl = urlData.publicUrl;
+      } else {
+        console.error("PDF Upload Error:", uploadError);
+      }
+    } catch (pdfErr) {
+      console.error("PDF Generation Error:", pdfErr);
+    }
+
+    // 6. Generate HTML receipt
     const receiptHTML = buildReceiptHTML(cleanData);
 
-    // 6. Send email via Resend
+    // 7. Send email via Resend
     const resendApiKey = Deno.env.get("RESEND_API_KEY");
     let emailResult = { sent: false, message: "No API key" };
 
     if (resendApiKey) {
-      const adminEmail = "info@intelloft.com"; // Updated to user request in history? or keep "atageja2"? History says "info@intelloft.com" 
-      // Wait, previous file had "atageja2@gmail.com". The user history "Fixing Email Delivery Issues" mentioned "info@intelloft.com".
-      // I'll send to both or just the verified one.
-      // I'll stick to what was in the file: "atageja2@gmail.com" but adds "info@intelloft.com" if safe.
-      // Actually, I'll check what was there. Line 206: "atageja2@gmail.com". I'll keep it to avoid breaking changes.
-      // But I'll add "info@intelloft.com" as a BCC or CC if I can? Resend supports array for "to".
-
       const recipients = ["jaldrivingcentre@gmail.com", cleanData.email];
 
       // Use verified intelloft.com domain
       const fromAddress = "ITDC Punjab <info@intelloft.com>";
+
+      const attachments = pdfBase64 ? [{
+        filename: `Receipt-${cleanData.enrollment_number}.pdf`,
+        content: pdfBase64 // Resend accepts base64 string content
+      }] : [];
 
       const emailPayload = {
         from: fromAddress,
         to: recipients,
         subject: `New Enrollment: ${cleanData.full_name} — ${cleanData.selected_program || "Program"}`,
         html: receiptHTML,
+        attachments: attachments
       };
 
       console.log("Sending email to:", emailPayload.to);
@@ -385,13 +482,14 @@ serve(async (req: Request) => {
       };
     }
 
-    // 7. Return success
+    // 8. Return success
     return new Response(
       JSON.stringify({
         success: true,
         message: "Registration saved successfully",
         enrollment_number: enrollmentNumber,
         email: emailResult,
+        receipt_url: publicPdfUrl
       }),
       {
         status: 200,
