@@ -36,13 +36,12 @@ async function verifyRazorpaySignature(orderId: string, paymentId: string, signa
 }
 
 // Course Fees Mapping (in Paise)
-// FOR TESTING ONLY: ₹1, ₹2, ₹3
 const COURSE_FEES: Record<string, number> = {
-  "Form 5 Refresher": 100,          // ₹1
-  "Form 5A Fuel Efficient": 200,    // ₹2
-  "Combined Course": 300,           // ₹3
-  "Combined Form 5 + 5A": 300,      // ₹3
-  "Combined Form 5 & 5A": 300       // ₹3
+  "Form 5 Refresher": 88500,        // ₹885
+  "Form 5A Fuel Efficient": 59000,  // ₹590
+  "Combined Course": 147500,        // ₹1475 (Matches "Combined Form 5 + 5A" logic roughly, using simplified key)
+  "Combined Form 5 + 5A": 147500,   // Handle specific exact string from frontend if needed
+  "Combined Form 5 & 5A": 147500    // Handle ampersand variation
 };
 
 function getFeeForCourse(courseName: string): number {
