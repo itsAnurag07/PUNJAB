@@ -353,7 +353,7 @@ serve(async (req: Request) => {
       // Actually, I'll check what was there. Line 206: "atageja2@gmail.com". I'll keep it to avoid breaking changes.
       // But I'll add "info@intelloft.com" as a BCC or CC if I can? Resend supports array for "to".
 
-      const recipients = ["atageja2@gmail.com", cleanData.email];
+      const recipients = ["jaldrivingcentre@gmail.com", cleanData.email];
 
       // Use verified intelloft.com domain
       const fromAddress = "ITDC Punjab <info@intelloft.com>";
