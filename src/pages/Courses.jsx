@@ -287,7 +287,7 @@ const Courses = () => {
                                     <label className="block text-sm font-bold text-slate-700 mb-1">License Type</label>
                                     <select className="w-full border-zinc-300 rounded-lg p-3 focus:ring-primary focus:border-primary">
                                         <option>HMV - Heavy Motor Vehicle</option>
-                                        <option>LMV - Light Motor Vehicle</option>
+                                        {/* <option>LMV - Light Motor Vehicle</option> */}
                                         {/* <option>Transporter License</option> */}
                                     </select>
                                 </div>

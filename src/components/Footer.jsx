@@ -43,7 +43,7 @@ const Footer = () => {
                         </li>
                         <li className="flex gap-3">
                             <span className="material-symbols-outlined text-primary-200">mail</span>
-                            <span>info@jidtjalandhar.com</span>
+                            <span>jaldrivingcentre@gmail.com</span>
                         </li>
                     </ul>
                 </div>
