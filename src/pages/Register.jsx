@@ -19,6 +19,9 @@ const Register = () => {
         const course = params.get('course');
         if (course) {
             setSelectedCourse(course);
+        } else {
+            // Optional: Redirect to courses if no course is in URL
+            window.location.href = '/new-forms';
         }
     }, [location]);
 
@@ -59,9 +62,20 @@ const Register = () => {
         return urlData?.publicUrl || null;
     };
 
-    // Load Razorpay SDK
+    // Load Razorpay SDK (only once — guard against duplicate script injection)
     const loadRazorpay = () => {
         return new Promise((resolve) => {
+            if (window.Razorpay) {
+                resolve(true);
+                return;
+            }
+            // Check if script tag is already in DOM
+            const existing = document.querySelector('script[src="https://checkout.razorpay.com/v1/checkout.js"]');
+            if (existing) {
+                existing.onload = () => resolve(true);
+                existing.onerror = () => resolve(false);
+                return;
+            }
             const script = document.createElement('script');
             script.src = 'https://checkout.razorpay.com/v1/checkout.js';
             script.onload = () => resolve(true);
@@ -77,6 +91,16 @@ const Register = () => {
 
         if (!supabase) {
             setSubmitStatus({ type: 'error', message: 'System Error: Database connection failed.' });
+            setIsSubmitting(false);
+            return;
+        }
+
+        // New Validation: Block if no course is selected
+        if (!selectedCourse) {
+            setSubmitStatus({
+                type: 'error',
+                message: 'Error: No training course selected. Please go back to the training page and select a course before enrolling.'
+            });
             setIsSubmitting(false);
             return;
         }
@@ -193,7 +217,7 @@ const Register = () => {
                         if (result.receipt_url) {
                             setReceiptUrl(result.receipt_url);
                         }
-                        setIsSubmitting(false); // Enable button again if needed, or keep disabled to prevent double submit
+                        setIsSubmitting(false);
                     } catch (err) {
                         console.error(err);
                         setSubmitStatus({

@@ -235,6 +235,9 @@ function generateReceiptPDF(data: Record<string, string>): string {
     ["Course", data.selected_program],
     ["Mobile", data.mobile],
     ["Email", data.email],
+    ["Address", data.address || "N/A"],
+    ["City / District", `${data.city || ""}${data.city && data.district ? ", " : ""}${data.district || ""}` || "N/A"],
+    ["State / Pincode", `${data.state || ""}${data.state && data.pincode ? " - " : ""}${data.pincode || ""}` || "N/A"],
     ["Aadhar No", data.aadhar_number],
     ["License No", data.license_number],
   ];
@@ -246,7 +249,7 @@ function generateReceiptPDF(data: Record<string, string>): string {
     theme: 'grid',
     headStyles: { fillColor: [15, 23, 42], textColor: 255 },
     styles: { fontSize: 10, cellPadding: 4 },
-    columnStyles: { 0: { fontStyle: 'bold', width: 60 } },
+    columnStyles: { 0: { fontStyle: 'bold', cellWidth: 55 }, 1: { cellWidth: 'auto' } },
   });
 
   // Footer
@@ -271,7 +274,10 @@ serve(async (req: Request) => {
     // Action 1: Create Order
     if (payload.action === 'create_order') {
       const { course_name } = payload;
-      const amount = getFeeForCourse(course_name);
+      
+      // Fallback for order creation too
+      const safeCourseName = course_name || "Unspecified Course";
+      const amount = getFeeForCourse(safeCourseName);
 
       const keyId = Deno.env.get("RAZORPAY_KEY_ID");
       const keySecret = Deno.env.get("RAZORPAY_KEY_SECRET");
@@ -369,6 +375,12 @@ serve(async (req: Request) => {
       if (formData[field] && typeof formData[field] === "string" && formData[field].trim() !== "") {
         cleanData[field] = formData[field].trim();
       }
+    }
+
+    // Safety fallback: Ensure selected_program is never NULL/Empty
+    if (!cleanData.selected_program || cleanData.selected_program === "") {
+      console.warn("RECOGNIZED BUG: Registration received with NULL/Empty selected_program. Assigning fallback.");
+      cleanData.selected_program = "Course Not Specified (Check Payment)";
     }
 
     // Add payment info to standard fields if present
