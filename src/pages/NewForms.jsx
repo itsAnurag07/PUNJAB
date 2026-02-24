@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import './NewForms.css';
 
 const NewForms = () => {
@@ -59,9 +60,9 @@ const NewForms = () => {
                                 </li>
                             ))}
                         </ul>
-                        <a href="/register?course=Form 5 Refresher" className="w-full bg-primary text-white font-bold py-4 rounded-lg hover:bg-primary/90 transition-all flex items-center justify-center gap-2 text-center">
+                        <Link to="/register?course=Form 5 Refresher" className="w-full bg-primary text-white font-bold py-4 rounded-lg hover:bg-primary/90 transition-all flex items-center justify-center gap-2 text-center">
                             Select Form 5 Course <span className="material-symbols-outlined">arrow_forward</span>
-                        </a>
+                        </Link>
                     </div>
 
                     {/* Card 2: Form 5A Fuel Efficient */}
@@ -88,9 +89,9 @@ const NewForms = () => {
                                 </li>
                             ))}
                         </ul>
-                        <a href="/register?course=Form 5A Fuel Efficient" className="w-full bg-accent-gold text-white font-bold py-4 rounded-lg hover:brightness-110 transition-all flex items-center justify-center gap-2 text-center">
+                        <Link to="/register?course=Form 5A Fuel Efficient" className="w-full bg-accent-gold text-white font-bold py-4 rounded-lg hover:brightness-110 transition-all flex items-center justify-center gap-2 text-center">
                             Select Form 5A Course <span className="material-symbols-outlined">arrow_forward</span>
-                        </a>
+                        </Link>
                     </div>
 
                     {/* Card 3: Combined Form 5 + 5A */}
@@ -121,9 +122,9 @@ const NewForms = () => {
                                 </li>
                             ))}
                         </ul>
-                        <a href="/register?course=Combined Form 5 and 5A" className="w-full bg-gradient-to-r from-primary to-red-700 text-white font-bold py-4 rounded-lg hover:shadow-lg hover:to-red-800 transition-all flex items-center justify-center gap-2 text-center group">
+                        <Link to="/register?course=Combined Course" className="w-full bg-gradient-to-r from-primary to-red-700 text-white font-bold py-4 rounded-lg hover:shadow-lg hover:to-red-800 transition-all flex items-center justify-center gap-2 text-center group">
                             Select Combined Package <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
-                        </a>
+                        </Link>
                     </div>
                 </div>
             </section>
@@ -250,9 +251,9 @@ const NewForms = () => {
                     <div className="flex flex-col md:flex-row items-center justify-center gap-6">
                         <h2 className="text-3xl font-bold md:mr-12 text-center md:text-left">Ready to advance your career?</h2>
                         <div className="flex flex-wrap justify-center gap-4">
-                            <a href="/register?course=Form 5 Refresher" className="bg-white text-primary px-10 py-4 rounded-lg font-bold hover:bg-gray-100 transition-all text-center">Enroll for Form 5</a>
-                            <a href="/register?course=Form 5A Fuel Efficient" className="bg-accent-gold text-white px-10 py-4 rounded-lg font-bold hover:brightness-110 transition-all text-center">Enroll for Form 5A</a>
-                            <a href="/register?course=Combined Form 5 & 5A" className="bg-white text-primary px-10 py-4 rounded-lg font-bold hover:bg-gray-100 transition-all text-center border-2 border-white">Enroll in Combined Course</a>
+                            <Link to="/register?course=Form 5 Refresher" className="bg-white text-primary px-10 py-4 rounded-lg font-bold hover:bg-gray-100 transition-all text-center">Enroll for Form 5</Link>
+                            <Link to="/register?course=Form 5A Fuel Efficient" className="bg-accent-gold text-white px-10 py-4 rounded-lg font-bold hover:brightness-110 transition-all text-center">Enroll for Form 5A</Link>
+                            <Link to="/register?course=Combined Course" className="bg-white text-primary px-10 py-4 rounded-lg font-bold hover:bg-gray-100 transition-all text-center border-2 border-white">Enroll in Combined Course</Link>
                         </div>
                     </div>
                 </div>

@@ -274,7 +274,7 @@ serve(async (req: Request) => {
     // Action 1: Create Order
     if (payload.action === 'create_order') {
       const { course_name } = payload;
-      
+
       // Fallback for order creation too
       const safeCourseName = course_name || "Unspecified Course";
       const amount = getFeeForCourse(safeCourseName);
@@ -456,7 +456,14 @@ serve(async (req: Request) => {
     let emailResult = { sent: false, message: "No API key" };
 
     if (resendApiKey) {
-      const recipients = ["jaldrivingcentre@gmail.com", cleanData.email];
+      const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      const recipients: string[] = ["jaldrivingcentre@gmail.com"];
+
+      if (cleanData.email && isValidEmail(cleanData.email)) {
+        recipients.push(cleanData.email);
+      } else {
+        console.warn("Skipping invalid user email:", cleanData.email);
+      }
 
       // Use verified intelloft.com domain
       const fromAddress = "ITDC Punjab <info@intelloft.com>";
