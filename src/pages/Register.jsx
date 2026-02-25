@@ -254,9 +254,15 @@ const Register = () => {
 
         } catch (error) {
             console.error('Registration/Payment error:', error);
+
+            let prettyMessage = error.message || 'Something went wrong. Please try again.';
+            if (prettyMessage.includes('Failed to fetch')) {
+                prettyMessage = 'Network Error: We could not reach the server. This is usually caused by Ad-blockers, VPNs, or a weak internet connection. Please disable ad-blockers or try on a different network.';
+            }
+
             setSubmitStatus({
                 type: 'error',
-                message: error.message || 'Something went wrong. Please try again.'
+                message: prettyMessage
             });
             setIsSubmitting(false);
         }
