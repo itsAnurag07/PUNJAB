@@ -1,6 +1,10 @@
 {
     "rewrites": [
         {
+            "source": "/api/enroll",
+            "destination": "https://mjlwmzqsgbhqtojqdxit.supabase.co/functions/v1/register"
+        },
+        {
             "source": "/(.*)",
             "destination": "/index.html"
         }

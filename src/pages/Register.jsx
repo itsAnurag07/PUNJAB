@@ -158,7 +158,7 @@ const Register = () => {
                 throw new Error('Razorpay SDK failed to load. Please check your internet connection.');
             }
 
-            const orderResponse = await fetch(`${SUPABASE_URL}/functions/v1/register`, {
+            const orderResponse = await fetch('/api/enroll', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -194,7 +194,7 @@ const Register = () => {
                             razorpay_signature: response.razorpay_signature
                         };
 
-                        const registerResponse = await fetch(`${SUPABASE_URL}/functions/v1/register`, {
+                        const registerResponse = await fetch('/api/enroll', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
