@@ -15,8 +15,8 @@ function generateEnrollmentNumber(): string {
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "POST, GET, OPTIONS, PUT, DELETE",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, sentry-trace, baggage",
 };
 
 // Verify Razorpay Signature
@@ -47,6 +47,8 @@ const COURSE_FEES: Record<string, number> = {
 };
 
 function getFeeForCourse(courseName: string): number {
+  if (!courseName) return 88500; // Default if undefined or empty
+
   // Default to lowest if not found (should not happen with valid input)
   // Or better, error out.
   // Try exact match first
@@ -264,7 +266,14 @@ function generateReceiptPDF(data: Record<string, string>): string {
 serve(async (req: Request) => {
   // Handle CORS preflight
   if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
+    // Echo back the requested headers to prevent "Failed to fetch" CORS errors for users with extensions
+    const requestedHeaders = req.headers.get("Access-Control-Request-Headers") || corsHeaders["Access-Control-Allow-Headers"];
+    return new Response("ok", {
+      headers: {
+        ...corsHeaders,
+        "Access-Control-Allow-Headers": requestedHeaders
+      }
+    });
   }
 
   try {
@@ -390,7 +399,7 @@ serve(async (req: Request) => {
       cleanData.payment_status = "captured"; // Razorpay auto-captures with our setting
       // We can approximate amount from course name or pass it securely? 
       // Better to rely on what we know:
-      cleanData.payment_amount = String(getFeeForCourse(formData.selected_program));
+      cleanData.payment_amount = String(getFeeForCourse(cleanData.selected_program));
     }
 
 

@@ -121,9 +121,9 @@ serve(async (req: Request) => {
       headers: { "Content-Type": "application/json" }
     });
 
-  } catch (error) {
+  } catch (error: any) {
     console.error("Function failed:", error);
-    return new Response(JSON.stringify({ success: false, error: error.message }), {
+    return new Response(JSON.stringify({ success: false, error: error?.message || "Unknown error" }), {
       status: 500,
       headers: { "Content-Type": "application/json" }
     });
