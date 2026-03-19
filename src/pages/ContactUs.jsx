@@ -56,7 +56,7 @@ const ContactUs = () => {
                                 <div>
                                     <h3 className="font-bold text-lg mb-1 dark:text-gray-200">Phone Number</h3>
                                     <p className="text-gray-600 dark:text-gray-400">+91 90560-66373</p>
-                                    <p className="text-gray-600 dark:text-gray-400">+91 98140-55234</p>
+                                    <p className="text-gray-600 dark:text-gray-400">+91 90560-66473</p>
                                 </div>
                             </div>
                             <div className="border-l-4 border-primary bg-gray-50 dark:bg-zinc-800 p-6 rounded-r-lg flex items-start gap-4 shadow-sm">

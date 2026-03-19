@@ -29,9 +29,13 @@ function buildReceiptHTML(data) {
     return html;
 }
 
-async function resendEmail() {
+async function resendEmail(id) {
+    if (!id) {
+        console.error("Please provide an ID.");
+        process.exit(1);
+    }
     console.log("Fetching user...");
-    const { data, error } = await supabase.from('registrations').select('*').eq('id', 'dc161585-63b6-48df-9106-d2f894ca2440').single();
+    const { data, error } = await supabase.from('registrations').select('*').eq('id', id).single();
 
     if (error || !data) {
         console.error("User not found", error);
@@ -68,4 +72,4 @@ async function resendEmail() {
     }
 }
 
-resendEmail();
+resendEmail(process.argv[2]);
